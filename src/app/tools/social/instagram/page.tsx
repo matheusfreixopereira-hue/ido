@@ -119,39 +119,36 @@ export default function InstagramPage() {
   const exportImage = useCallback(() => {
     if (!imgRef.current) return;
     const tool = toolTabs.find(t => t.id === activeTool)!;
-    const canvas = document.createElement("canvas");
-    canvas.width = tool.w; canvas.height = tool.h;
-    const ctx = canvas.getContext("2d")!;
-    const ratio = CANVAS_SIZE / tool.w;
+    const factor = tool.w / CANVAS_SIZE;
 
+    const out = document.createElement("canvas");
+    out.width = tool.w;
+    out.height = tool.h;
+    const ctx = out.getContext("2d")!;
+
+    const ratio = tool.w / tool.h;
+    let baseW: number, baseH: number;
+    if (ratio >= 1) { baseW = CANVAS_SIZE; baseH = CANVAS_SIZE / ratio; }
+    else { baseH = CANVAS_SIZE; baseW = CANVAS_SIZE * ratio; }
+
+    const scaledW = baseW * scale * factor;
+    const scaledH = baseH * scale * factor;
+    const x = (tool.w - scaledW) / 2 + offset.x * factor;
+    const y = (tool.h - scaledH) / 2 + offset.y * factor;
+
+    ctx.save();
     if (activeTool === "profile") {
       ctx.beginPath();
       ctx.arc(tool.w / 2, tool.h / 2, tool.w / 2, 0, Math.PI * 2);
       ctx.clip();
     }
+    ctx.drawImage(imgRef.current, x, y, scaledW, scaledH);
+    ctx.restore();
 
-    const scaledW = (tool.w * scale) / ratio / CANVAS_SIZE * tool.w;
-    const scaledH = (tool.h * scale) / ratio / CANVAS_SIZE * tool.h;
-    const x = (tool.w - scaledW) / 2 + (offset.x / ratio);
-    const y = (tool.h - scaledH) / 2 + (offset.y / ratio);
-    ctx.drawImage(imgRef.current, x / (tool.w / CANVAS_SIZE), y / (tool.h / CANVAS_SIZE), scaledW / (tool.w / CANVAS_SIZE) * (tool.w / CANVAS_SIZE), scaledH / (tool.h / CANVAS_SIZE) * (tool.w / CANVAS_SIZE));
-
-    // simpler: just use preview canvas scaled up
-    const src = previewRef.current!;
-    const bigCanvas = document.createElement("canvas");
-    bigCanvas.width = tool.w; bigCanvas.height = tool.h;
-    const bCtx = bigCanvas.getContext("2d")!;
-    if (activeTool === "profile") {
-      bCtx.beginPath();
-      bCtx.arc(tool.w / 2, tool.h / 2, tool.w / 2, 0, Math.PI * 2);
-      bCtx.clip();
-    }
-    bCtx.drawImage(src, 0, 0, tool.w, tool.h);
-    bigCanvas.toBlob(blob => {
+    out.toBlob(blob => {
       if (!blob) return;
-      const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
-      a.href = url;
+      a.href = URL.createObjectURL(blob);
       a.download = `instagram-${activeTool}.png`;
       a.click();
     }, "image/png");
