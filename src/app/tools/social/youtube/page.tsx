@@ -25,6 +25,7 @@ export default function YouTubePage() {
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [channelName, setChannelName] = useState("Your Channel");
   const [subscribers, setSubscribers] = useState("1.2K subscribers");
+  const [imgReady, setImgReady] = useState(false);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -88,7 +89,7 @@ export default function YouTubePage() {
       ctx.textAlign = "center";
       ctx.fillText("Safe zone (all devices)", cW / 2, sy + safeH / 2);
     }
-  }, [imgSrc, offset, scale, activeTool, cW, cH, tool]);
+  }, [imgReady, offset, scale, activeTool, cW, cH, tool]);
 
   useEffect(() => { draw(); }, [draw]);
 
@@ -98,8 +99,9 @@ export default function YouTubePage() {
     setImgSrc(url);
     setOffset({ x: 0, y: 0 });
     setScale(1);
+    setImgReady(false);
     const img = new window.Image();
-    img.onload = () => { imgRef.current = img; draw(); };
+    img.onload = () => { imgRef.current = img; setImgReady(true); };
     img.src = url;
   };
 

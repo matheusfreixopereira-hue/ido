@@ -23,6 +23,7 @@ export default function InstagramPage() {
   const [username, setUsername] = useState("your.username");
   const [bio, setBio] = useState("Your bio here 🌟");
   const [result, setResult] = useState<string | null>(null);
+  const [imgReady, setImgReady] = useState(false);
 
   const previewRef = useRef<HTMLCanvasElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -84,7 +85,7 @@ export default function InstagramPage() {
       ctx.arc(CANVAS_SIZE / 2, CANVAS_SIZE / 2, CANVAS_SIZE / 2 - 1, 0, Math.PI * 2);
       ctx.stroke();
     }
-  }, [imgSrc, offset, scale, activeTool]);
+  }, [imgReady, offset, scale, activeTool]);
 
   useEffect(() => { draw(); }, [draw]);
 
@@ -95,8 +96,9 @@ export default function InstagramPage() {
     setOffset({ x: 0, y: 0 });
     setScale(1);
     setResult(null);
+    setImgReady(false);
     const img = new window.Image();
-    img.onload = () => { imgRef.current = img; draw(); };
+    img.onload = () => { imgRef.current = img; setImgReady(true); };
     img.src = url;
   };
 
