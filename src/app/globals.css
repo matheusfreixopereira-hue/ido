@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #07070f;
+  --bg-2: #0f0f1a;
+  --bg-3: #1a1a2e;
+  --border: rgba(139, 92, 246, 0.15);
+  --text: #f1f0ff;
+  --text-muted: #8b8aaa;
+  --purple: #8b5cf6;
+  --pink: #ec4899;
+  --blue: #3b82f6;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #a78bfa 0%, #ec4899 50%, #f97316 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.glass {
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+}
+
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  border-color: rgba(139,92,246,0.4) !important;
+  box-shadow: 0 20px 40px rgba(139,92,246,0.12);
+}
+
+.upload-zone {
+  border: 2px dashed rgba(139,92,246,0.3);
+  transition: all 0.3s ease;
+}
+.upload-zone:hover, .upload-zone.dragging {
+  border-color: #8b5cf6;
+  background: rgba(139,92,246,0.05);
+}
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg-2); }
+::-webkit-scrollbar-thumb { background: rgba(139,92,246,0.35); border-radius: 3px; }
+
+@keyframes float {
+  0%,100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes glow {
+  0%,100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-float { animation: float 4s ease-in-out infinite; }
+.animate-glow { animation: glow 2s ease-in-out infinite; }
+
+.btn-primary {
+  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+.btn-primary:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(139,92,246,0.4);
+}
+.btn-primary:active { transform: translateY(0); }
+
+.btn-secondary {
+  background: rgba(139,92,246,0.1);
+  color: #a78bfa;
+  border: 1px solid rgba(139,92,246,0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+}
+.btn-secondary:hover {
+  background: rgba(139,92,246,0.2);
+  border-color: #8b5cf6;
+}
